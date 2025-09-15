@@ -3,6 +3,22 @@ import prisma from "@/lib/prisma";
 
 // // console.log("the file is loaded");
 
+export const syncUserSession = inngest.createFunction(
+  { id: "user-login" },
+  { event: "clerk/session.created" }, // triggers when a user logs in
+  async ({ event }) => {
+    console.log("User logged in:", event.data);
+  }
+);
+
+export const logAllClerkEvents = inngest.createFunction(
+  { id: "log-all-clerk-events" },
+  { event: "*" }, // matches any event
+  async ({ event }) => {
+    console.log("Received event:", JSON.stringify(event, null, 2));
+  }
+);
+
 export const syncUserCreation = inngest.createFunction(
   { id: "sync-user-from-clerk" },
   { event: "clerk/user.created" },
