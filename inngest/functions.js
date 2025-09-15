@@ -5,9 +5,26 @@ import prisma from "@/lib/prisma";
 
 export const syncUserSession = inngest.createFunction(
   { id: "user-login" },
-  { event: "clerk/session.created" }, // triggers when a user logs in
+  { event: "clerk/session.created" },
   async ({ event }) => {
     console.log("User logged in:", event.data);
+
+    // Example dummy data
+    const dummyUser = {
+      id: `dummy-${Date.now()}`, // unique ID
+      email: `dummy${Math.floor(Math.random() * 1000)}@example.com`,
+      name: "Dummy User",
+      image: "https://via.placeholder.com/150",
+    };
+
+    try {
+      const created = await prisma.user.create({
+        data: dummyUser,
+      });
+      console.log("Dummy user inserted into Neon:", created);
+    } catch (err) {
+      console.error("Failed to insert dummy user into Neon:", err);
+    }
   }
 );
 
